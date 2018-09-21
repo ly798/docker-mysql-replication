@@ -1,0 +1,49 @@
+version: '3.5'
+services:
+  mysqlmaster:
+    hostname: mysqlmaster
+    image: 'ly798/mysql-replication:5.7'
+    ports:
+      - '3306'
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=1
+      - REPLICATION_USER=a1
+      - REPLICATION_PASSWORD=a1
+    networks:
+      abc:
+  mysqlslave1:
+    hostname: mysqlslave1
+    image: 'ly798/mysql-replication:5.7'
+    ports:
+      - '3306'
+    depends_on:
+      - mysqlmaster
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=1
+      - MASTER_HOST=mysqlmaster
+      - MASTER_PORT=3306
+      - REPLICATION_USER=a1
+      - REPLICATION_PASSWORD=a1
+    networks:
+      abc:
+  mysqlslave2:
+    hostname: mysqlslave2
+    image: 'ly798/mysql-replication:5.7'
+    ports:
+      - '3306'
+    depends_on:
+      - mysqlmaster
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=1
+      - MASTER_HOST=mysqlmaster
+      - MASTER_PORT=3306
+      - REPLICATION_USER=a1
+      - REPLICATION_PASSWORD=a1
+    networks:
+      abc:
+
+
+networks:
+  abc:
+#    driver: overlay
+
