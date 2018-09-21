@@ -54,5 +54,10 @@ cat > /etc/mysql/mysql.conf.d/server-id.cnf << EOF
 server-id=$SERVER_ID
 EOF
 
-exec docker-entrypoint.sh "$@"
+if [ -z "$MASTER_HOST" ]; then
+  exec docker-entrypoint.sh "$@"
+else
+  echo $MASTER_HOST:$MASTER_PORT
+  exec wait-for-it.sh $MASTER_HOST:$MASTER_PORT -t 300 -- docker-entrypoint.sh "$@"
+fi
 
