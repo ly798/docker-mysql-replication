@@ -39,6 +39,7 @@ services:
       - MASTER_PORT=3306
       - REPLICATION_USER=a1
       - REPLICATION_PASSWORD=a1
+      - SLAVE_SERVER_ID=2
     networks:
       abc:
 
