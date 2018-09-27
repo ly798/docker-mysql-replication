@@ -15,6 +15,28 @@ if [ -n "$MASTER_PORT_3306_TCP_ADDR" ]; then
   export MASTER_PORT=$MASTER_PORT_3306_TCP_PORT
 fi
 
+
+cat >/docker-entrypoint-initdb.d/init-cc-user.sh  <<'EOF'
+#!/bin/bash
+
+echo Creating container cluster user ...
+mysql -u root -p -e "\
+  GRANT \
+    ALL PRIVILEGES \
+  ON *.* \
+  TO '$CC_USER'@'%' \
+  IDENTIFIED BY '$CC_PASSWORD' \
+  WITH GRANT OPTION; \
+  FLUSH PRIVILEGES; \
+"
+EOF
+
+cat >/root/.my.cnf  << EOF
+[client]
+user=$CC_USER
+password=$CC_PASSWORD
+EOF
+
 if [ -z "$MASTER_HOST" ]; then
   export SERVER_ID=1
   cat >/docker-entrypoint-initdb.d/init-master.sh  <<'EOF'
@@ -33,6 +55,17 @@ mysql -u root -e "\
   ON *.* \
   TO '$REPLICATION_USER'@'%' \
   IDENTIFIED BY '$REPLICATION_PASSWORD'; \
+  FLUSH PRIVILEGES; \
+"
+EOF
+
+  cat >/docker-entrypoint-initdb.d/init-root-user.sh  <<'EOF'
+#!/bin/bash
+
+echo Update mysql root user ...
+mysql -u root -p -e "\
+  SET PASSWORD FOR \
+  'root'@'localhost' = PASSWORD('$ROOT_PASSWORD'); \
   FLUSH PRIVILEGES; \
 "
 EOF

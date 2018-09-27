@@ -1,4 +1,4 @@
-version: '3.5'
+version: '2'
 services:
   mysqlmaster:
     hostname: mysqlmaster
@@ -9,6 +9,10 @@ services:
       - MYSQL_ALLOW_EMPTY_PASSWORD=1
       - REPLICATION_USER=a1
       - REPLICATION_PASSWORD=a1
+      - ROOT_PASSWORD=abc123
+      - MYSQL_DATABASE=test
+      - MYSQL_USER=test
+      - MYSQL_PASSWORD=abc123
     networks:
       abc:
   mysqlslave1:
@@ -24,6 +28,11 @@ services:
       - MASTER_PORT=3306
       - REPLICATION_USER=a1
       - REPLICATION_PASSWORD=a1
+      - SLAVE_SERVER_ID=2
+      - ROOT_PASSWORD=abc123
+      - MYSQL_DATABASE=test
+      - MYSQL_USER=test
+      - MYSQL_PASSWORD=abc123
     networks:
       abc:
   mysqlslave2:
@@ -39,7 +48,11 @@ services:
       - MASTER_PORT=3306
       - REPLICATION_USER=a1
       - REPLICATION_PASSWORD=a1
-      - SLAVE_SERVER_ID=2
+      - SLAVE_SERVER_ID=3
+      - ROOT_PASSWORD=abc123
+      - MYSQL_DATABASE=test
+      - MYSQL_USER=test
+      - MYSQL_PASSWORD=abc123
     networks:
       abc:
 

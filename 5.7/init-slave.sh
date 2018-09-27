@@ -12,7 +12,7 @@ MYSQLDUMP_PORT=${MYSQLDUMP_PORT:-$MASTER_PORT}
 
 check_slave_health () {
   echo Checking replication health:
-  status=$(mysql -u root -e "SHOW SLAVE STATUS\G")
+  status=$(mysql -u root -p$ROOT_PASSWORD -e "SHOW SLAVE STATUS\G")
   echo "$status" | egrep 'Slave_(IO|SQL)_Running:|Seconds_Behind_Master:|Last_.*_Error:' | grep -v "Error: $"
   if ! echo "$status" | grep -qs "Slave_IO_Running: Yes"    ||
      ! echo "$status" | grep -qs "Slave_SQL_Running: Yes"   ||
@@ -50,7 +50,7 @@ mysqldump \
 echo mysqldump completed.
 
 echo Starting slave ...
-mysql -u root -e "START SLAVE;"
+mysql -u root -p$ROOT_PASSWORD -e "START SLAVE;"
 
 echo Initial health check:
 check_slave_health
