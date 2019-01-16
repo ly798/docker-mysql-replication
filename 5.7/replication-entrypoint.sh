@@ -68,6 +68,12 @@ mysql -u root -p -e "\
   'root'@'localhost' = PASSWORD('$ROOT_PASSWORD'); \
   FLUSH PRIVILEGES; \
 "
+
+echo Disable remote root user ...
+mysql -u root -p$ROOT_PASSWORD -e "\
+  DROP USER 'root'@'%';
+  FLUSH PRIVILEGES; \
+"
 EOF
 else
   # TODO: make server-id discoverable
